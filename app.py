@@ -9,21 +9,42 @@ from sklearn.neighbors import KNeighborsClassifier
 from imblearn.over_sampling import SMOTE
 import matplotlib.pyplot as plt #visualization
 import seaborn as sns #visualization
-import model
+from model import new_model
 
 st.set_page_config(layout="wide")
 st.title("k-Nearest Neighbour Model")
 st.set_option('deprecation.showPyplotGlobalUse', False)
+col1, col2 = st.columns([0.5,0.5])
+
+def drop_dupe():
+    wine.drop_duplicates(inplace=True)
+    st.write("Dữ liệu trùng sau khi xóa: ", wine[wine.columns.tolist()].duplicated().sum())
+
 
 with st.container():
     df = st.sidebar.file_uploader("Upload Dataset", type='csv')
     wine = pd.read_csv(df)
 
 with st.container(): #Bỏ container maybe
-    graph = st.sidebar.radio('Graphs', options=["Giá trị trung bình mỗi thuộc tính","Tỉ trọng mỗi thuộc tính", "Biểu đồ độ tương quan"])
+    func = st.sidebar.radio('Graphs', options=["Kiểm tra dữ liệu","Giá trị trung bình mỗi thuộc tính","Tỉ trọng mỗi thuộc tính", "Biểu đồ độ tương quan và Dự đoán chất lượng rượu"])
 
 with st.container():
-    if graph == "Giá trị trung bình mỗi thuộc tính":
+    if func == "Kiểm tra dữ liệu":
+        with col1: 
+            st.write("Số dòng: ", wine.shape[0])
+            st.write("Số cột: ", wine.shape[1], "\n")
+            #Kiểm Tra dữ liệu thiếu
+            st.write("Dữ liệu  trùng: ", wine[wine.columns.tolist()].duplicated().sum())
+            if st.button("Xóa dữ liệu thiếu"):
+                drop_dupe()
+
+        with col2:
+            st.write("Missing values:")
+            st.write(wine[wine.columns.tolist()].isnull().sum())
+
+
+with st.container():
+    if func == "Giá trị trung bình mỗi thuộc tính":
         attributes = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide',	'total sulfur dioxide',	'density','pH','sulphates','alcohol', 'quality']
         mean_values = wine[attributes].mean()
         plt.figure(figsize = (15,10))
@@ -35,7 +56,7 @@ with st.container():
         st.pyplot(plt)
 
 with st.container():
-    if graph == "Tỉ trọng mỗi thuộc tính":
+    if func == "Tỉ trọng mỗi thuộc tính":
         plt.figure(figsize=(13,6))
         plt.subplot(121)
         wine["quality"].value_counts().plot.pie(autopct  = "%1.0f%%",
@@ -66,13 +87,14 @@ with st.container():
         st.pyplot(plt)
 
 with st.container():
-    if graph == "Biểu đồ độ tương quan":
+    if func == "Biểu đồ độ tương quan và Dự đoán chất lượng rượu":
         correlation=wine.corr()
         print(correlation['quality'].sort_values(ascending=False))
         correlation['quality'].drop('quality').sort_values(ascending=False).plot(kind='bar',figsize=(10,5))
         plt.title("Biểu đồ độ tương quan")
         st.pyplot(plt)
         with st.form("Loại bỏ cột"):
+            st.write("Loại bỏ cột")
             a = st.checkbox('fixed acidity')
             b = st.checkbox('volatile acidity')
             c = st.checkbox('citric acid')
@@ -84,7 +106,6 @@ with st.container():
             i = st.checkbox('pH')
             k = st.checkbox('sulphates')
             l = st.checkbox('alcohol')
-            m = st.checkbox('quality')
             submitted = st.form_submit_button()
             if submitted:
                 if a: wine = wine.drop('fixed acidity', axis = 1)
@@ -92,17 +113,40 @@ with st.container():
                 if c: wine = wine.drop('citric acid', axis = 1)
                 if d: wine = wine.drop('residual sugar', axis = 1)
                 if e: wine = wine.drop('chlorides', axis = 1)
-                if e: wine = wine.drop('chlorides', axis = 1)
                 if f: wine = wine.drop('free sulfur dioxide', axis = 1)
                 if g: wine = wine.drop('total sulfur dioxide', axis = 1)
                 if h: wine = wine.drop('density', axis = 1)
                 if i: wine = wine.drop('pH', axis = 1)
                 if k: wine = wine.drop('sulphates', axis = 1)
                 if l: wine = wine.drop('alcohol', axis = 1)
-                if m: wine = wine.drop('quality', axis = 1)
             st.write(wine)
 
-
-
-
-
+        with st.container():
+            with st.form("Predict"):
+                if 'fixed acidity' in wine:
+                    fixed_acidity = st.number_input('fixed acidity')
+                if 'volatile acidity' in wine:
+                    volatile_acidity = st.number_input('volatile acidity')
+                if 'citric acid' in wine:
+                    citric_acid = st.number_input('citric acid')
+                if 'residual sugar' in wine:
+                    residual_sugar = st.number_input('residual sugar')
+                if 'chlorides' in wine:
+                    chlorides = st.number_input('chlorides')
+                if 'free sulfur dioxide' in wine:
+                    free_sulfur_dioxide = st.number_input('free sulfur dioxide')
+                if 'total sulfur dioxide' in wine:
+                    total_sulfur_dioxide = st.number_input('total sulfur dioxide')
+                if 'density' in wine:
+                    density = st.number_input('density')
+                if 'pH' in wine:
+                    pH = st.number_input('pH')
+                if 'sulphates' in wine:
+                    sulphates = st.number_input('sulphates')
+                if 'alcohol' in wine:
+                    alcohol = st.number_input('alcohol')
+                    submitted = st.form_submit_button()
+                if submitted: 
+                    user_X_test = [[fixed_acidity,volatile_acidity,citric_acid,residual_sugar,chlorides,free_sulfur_dioxide,total_sulfur_dioxide,density,pH,sulphates,alcohol]]
+                    user_pred = new_model.predict(user_X_test)
+                    st.write("Quality dự đoán: ",user_pred)
