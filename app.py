@@ -121,31 +121,31 @@ if df is not None:
                         if l: wine = wine.drop('alcohol', axis = 1)
                     st.write(wine)
 
-            with st.form("Predict"):
-                if 'fixed acidity' in wine:
-                    fixed_acidity = st.number_input('fixed acidity')
-                if 'volatile acidity' in wine:
-                    volatile_acidity = st.number_input('volatile acidity')
-                if 'citric acid' in wine:
-                    citric_acid = st.number_input('citric acid')
-                if 'residual sugar' in wine:
-                    residual_sugar = st.number_input('residual sugar')
-                if 'chlorides' in wine:
-                    chlorides = st.number_input('chlorides')
-                if 'free sulfur dioxide' in wine:
-                    free_sulfur_dioxide = st.number_input('free sulfur dioxide')
-                if 'total sulfur dioxide' in wine:
-                    total_sulfur_dioxide = st.number_input('total sulfur dioxide')
-                if 'density' in wine:
-                    density = st.number_input('density')
-                if 'pH' in wine:
-                    pH = st.number_input('pH')
-                if 'sulphates' in wine:
-                    sulphates = st.number_input('sulphates')
-                if 'alcohol' in wine:
-                    alcohol = st.number_input('alcohol')
-                submitted = st.form_submit_button()
-                if submitted: 
-                    user_X_test = [[fixed_acidity,volatile_acidity,citric_acid,residual_sugar,chlorides,free_sulfur_dioxide,total_sulfur_dioxide,density,pH,sulphates,alcohol]]
-                    user_pred = new_model.predict(user_X_test)
-                    st.write("Quality dự đoán: ",user_pred)
+                with st.form("Predict"):
+                    if 'fixed acidity' in wine:
+                        fixed_acidity = st.number_input('fixed acidity')
+                    if 'volatile acidity' in wine:
+                        volatile_acidity = st.number_input('volatile acidity')
+                    if 'citric acid' in wine:
+                        citric_acid = st.number_input('citric acid')
+                    if 'residual sugar' in wine:
+                        residual_sugar = st.number_input('residual sugar')
+                    if 'chlorides' in wine:
+                        chlorides = st.number_input('chlorides')
+                    if 'free sulfur dioxide' in wine:
+                        free_sulfur_dioxide = st.number_input('free sulfur dioxide')
+                    if 'total sulfur dioxide' in wine:
+                        total_sulfur_dioxide = st.number_input('total sulfur dioxide')
+                    if 'density' in wine:
+                        density = st.number_input('density')
+                    if 'pH' in wine:
+                        pH = st.number_input('pH')
+                    if 'sulphates' in wine:
+                        sulphates = st.number_input('sulphates')
+                    if 'alcohol' in wine:
+                        alcohol = st.number_input('alcohol')
+                    submitted = st.form_submit_button()
+                    if submitted: 
+                        user_X_test = [[fixed_acidity,volatile_acidity,citric_acid,residual_sugar,chlorides,free_sulfur_dioxide,total_sulfur_dioxide,density,pH,sulphates,alcohol]]
+                        user_pred = new_model.predict(user_X_test)
+                        st.write("Quality dự đoán: ",user_pred)
