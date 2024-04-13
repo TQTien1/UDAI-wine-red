@@ -8,7 +8,7 @@ import sklearn.metrics as metrics
 from sklearn.neighbors import KNeighborsClassifier
 from imblearn.over_sampling import SMOTE
 
-wine = pd.read_csv('winequality-red.csv')
+wine = pd.read_csv('winequality-red.csv', sep = ";")
 
 X=wine.drop('quality', axis = 1)
 y=wine['quality']

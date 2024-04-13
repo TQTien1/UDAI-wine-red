@@ -22,9 +22,10 @@ def drop_dupe():
 
 with st.container():
     df = st.sidebar.file_uploader("Upload Dataset", type='csv')
+
 if df is not None:
-    wine = pd.read_csv(df)
-    with st.container(): #Bỏ container maybe
+    wine = pd.read_csv(df, sep = ";")
+    with st.container(): 
         func = st.sidebar.radio('Graphs', options=["Kiểm tra dữ liệu","Giá trị trung bình mỗi thuộc tính","Phân bố mỗi thuộc tính", "Biểu đồ độ tương quan và Dự đoán chất lượng rượu"])
 
     with st.container():
